@@ -1,4 +1,3 @@
-
 package com.reactlibrary;
 
 import com.facebook.react.bridge.ReactApplicationContext;
