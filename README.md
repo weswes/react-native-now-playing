@@ -34,15 +34,6 @@
       compile project(':react-native-now-playing')
   	```
 
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
-
-1. In Visual Studio add the `RNNowPlaying.sln` in `node_modules/react-native-now-playing/windows/RNNowPlaying.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using Com.Reactlibrary.RNNowPlaying;` to the usings at the top of the file
-  - Add `new RNNowPlayingPackage()` to the `List<IReactPackage>` returned by the `Packages` method
-
-
 ## Usage
 ```javascript
 import RNNowPlaying from 'react-native-now-playing';
