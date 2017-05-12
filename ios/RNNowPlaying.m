@@ -23,11 +23,19 @@ RCT_EXPORT_MODULE();
 
 - (void)nowPlayingEventReceived:(NSNotification *)notification
 {
+    //e.playbackTime, e.playbackDuration, e.title, e.albumTitle, e.artist
     MPMusicPlayerController *player = (MPMusicPlayerController *)notification.object;
     MPMediaItem *item = [player nowPlayingItem];
+    NSLog(@"%@", item);
     if (self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
         [self.bridge.eventDispatcher sendAppEventWithName:@"nowPlayingEvent"
-                                                     body:@{@"title": item.title}];
+                                                     body:@{@"playbackTime": item.playbackTime,
+                                                            @"playbackDuration": item.playbackDuration,
+                                                            @"title": item.title,
+                                                            @"albumTitle": item.albumTitle,
+                                                            @"artist": item.artist
+                                                        
+                                                            }];
     }
 }
 

@@ -71,8 +71,9 @@ public class RNNowPlayingModule extends ReactContextBaseJavaModule {
 
         if (playing){
           WritableMap params = Arguments.createMap();
-          params.putString("title", track);
-
+			params.putString("title", track);
+			params.putString("artist", artist);
+			params.putString("album", album);
           sendEvent(reactContext, "nowPlayingEvent", params);
         }
       }
