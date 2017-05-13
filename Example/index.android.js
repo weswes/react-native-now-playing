@@ -2,6 +2,6 @@
 import React, { Component } from 'react';
 import  { AppRegistry } from 'react-native';
 
-import ReactNativeNowPlayingExample from './main';
+import Example from './main';
 
-AppRegistry.registerComponent('ReactNativeNowPlayingExample', () => Kizbee);
+AppRegistry.registerComponent('Example', () => Example);

@@ -3,15 +3,15 @@
 
 @implementation RNNowPlaying
 
-@synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
-- (dispatch_queue_t)methodQueue{
-	return dispatch_get_main_queue();
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"NowPlayingEvent"];
 }
 
 - (RNNowPlaying *)init {
-    self = [super init];
     self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nowPlayingEventReceived:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:self.musicPlayer];
      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nowPlayingEventReceived:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:self.musicPlayer];
@@ -27,15 +27,15 @@ RCT_EXPORT_MODULE();
     MPMusicPlayerController *player = (MPMusicPlayerController *)notification.object;
     MPMediaItem *item = [player nowPlayingItem];
     NSLog(@"%@", item);
-    if (self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
-        [self.bridge.eventDispatcher sendAppEventWithName:@"nowPlayingEvent"
-                                                     body:@{@"playbackTime": item.playbackTime,
-                                                            @"playbackDuration": item.playbackDuration,
-                                                            @"title": item.title,
-                                                            @"albumTitle": item.albumTitle,
-                                                            @"artist": item.artist
-                                                        
-                                                            }];
+    if (player.playbackState == MPMusicPlaybackStatePlaying){
+        [self sendEventWithName:@"NowPlayingEvent"
+              body:@{@"playbackTime": [NSNumber numberWithDouble:player.currentPlaybackTime],
+                     @"playbackDuration": [NSNumber numberWithDouble:item.playbackDuration],
+                     @"title": item.title,
+                     @"albumTitle": item.albumTitle,
+                     @"artist": item.artist
+                                                            
+                   }];
     }
 }
 

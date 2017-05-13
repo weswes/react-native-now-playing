@@ -1,3 +1,5 @@
 rootProject.name = 'Example'
+include ':react-native-now-playing'
+project(':react-native-now-playing').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-now-playing/android')
 
 include ':app'
