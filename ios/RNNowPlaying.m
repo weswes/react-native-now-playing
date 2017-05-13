@@ -26,22 +26,26 @@ RCT_EXPORT_MODULE();
     //e.playbackTime, e.playbackDuration, e.title, e.albumTitle, e.artist
     MPMusicPlayerController *player = (MPMusicPlayerController *)notification.object;
     MPMediaItem *item = [player nowPlayingItem];
-    NSLog(@"%@", item);
+    
+    
+    NSString *playbackTime = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:player.currentPlaybackTime]];
+    NSString *playbackDuration = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:item.playbackDuration]];
+    NSString *artist = [NSString stringWithFormat:@"%@", item.artist];
+    NSString *albumTitle = [NSString stringWithFormat:@"%@", item.albumTitle];
+    NSString *title = [NSString stringWithFormat:@"%@", item.title];
+    
     if (player.playbackState == MPMusicPlaybackStatePlaying){
         [self sendEventWithName:@"NowPlayingEvent"
-              body:@{@"playbackTime": [NSNumber numberWithDouble:player.currentPlaybackTime],
-                     @"playbackDuration": [NSNumber numberWithDouble:item.playbackDuration],
-                     @"title": item.title,
-                     @"albumTitle": item.albumTitle,
-                     @"artist": item.artist
-                                                            
-                   }];
+                           body:@{@"playbackTime": playbackTime,
+                                  @"playbackDuration": playbackDuration,
+                                  @"title": title,
+                                  @"albumTitle": albumTitle,
+                                  @"artist": artist
+                                  
+                                  }];
     }
-}
+        
 
-- (NSDictionary *)constantsToExport
-{
-    return @{ @"test": @"test" };
 }
 
 @end
