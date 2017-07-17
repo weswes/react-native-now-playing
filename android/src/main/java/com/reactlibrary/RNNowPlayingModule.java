@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -31,9 +30,19 @@ public class RNNowPlayingModule extends ReactContextBaseJavaModule {
     return "RNNowPlaying";
   }
 
-  private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params){
-    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
+  private void sendEvent(String eventName, @Nullable WritableMap params){
+    Log.v("intent", "send event");
+    try{
+      if (getReactApplicationContext().hasActiveCatalystInstance()) {
+        Log.v("intent", "send event hasActiveCatalystInstance ok");
+        getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+        Log.v("intent", "send event ok");
+      }
+    } catch (Exception ex){
+      Log.v("intent", "send event ko thread interrupt");
+    }
+
   }
 
   public void registerListenedMusic(Context context) {
@@ -67,14 +76,14 @@ public class RNNowPlayingModule extends ReactContextBaseJavaModule {
 
         AudioManager manager = (AudioManager)(context).getSystemService(Context.AUDIO_SERVICE);
 
-        Log.v("intent", "card_ecoute locale detectée ac:" + action + " cmd:" + cmd + " track " + track + " playing " + playing + "music active: " + manager.isMusicActive());
+        Log.v("intent", "ecoute locale detectée ac:" + action + " cmd:" + cmd + " track " + track + " playing " + playing + "music active: " + manager.isMusicActive());
 
         if (playing){
           WritableMap params = Arguments.createMap();
-			params.putString("title", track);
-			params.putString("artist", artist);
-			params.putString("album", album);
-          sendEvent(reactContext, "nowPlayingEvent", params);
+          params.putString("title", track);
+          params.putString("artist", artist);
+          params.putString("albumTitle", album);
+          sendEvent("NowPlayingEvent", params);
         }
       }
     };
