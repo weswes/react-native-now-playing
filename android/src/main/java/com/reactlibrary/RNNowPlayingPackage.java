@@ -17,7 +17,6 @@ public class RNNowPlayingPackage implements ReactPackage {
       return Arrays.<NativeModule>asList(new RNNowPlayingModule(reactContext));
     }
 
-    @Override
     public List<Class<? extends JavaScriptModule>> createJSModules() {
       return Collections.emptyList();
     }
