@@ -19,6 +19,12 @@ public class RNNowPlayingModule extends ReactContextBaseJavaModule {
   private Context context;
   private final ReactApplicationContext reactContext;
 
+  static final class BroadcastTypes {
+    static final String ANDROID_PLAYSTATE_CHANGED = "com.android.music.playstatechanged";
+    static final String ANDROID_METADATA_CHANGED = "com.android.music.metadatachanged";
+    static final String SPOTIFY_METADATA_CHANGED = "com.spotify.music.metadatachanged";
+}
+
   public RNNowPlayingModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
@@ -47,9 +53,9 @@ public class RNNowPlayingModule extends ReactContextBaseJavaModule {
 
   public void registerListenedMusic(Context context) {
     IntentFilter iF = new IntentFilter();
-    iF.addAction("com.android.music.playstatechanged");
-    iF.addAction("com.android.music.metachanged");
-    iF.addAction("com.spotify.mobile.android.metadatachanged");
+    iF.addAction(BroadcastTypes.ANDROID_PLAYSTATE_CHANGED);
+    iF.addAction(BroadcastTypes.ANDROID_METADATA_CHANGED);
+    iF.addAction(BroadcastTypes.SPOTIFY_METADATA_CHANGED);
 
     this.context = context;
     context.registerReceiver(mReceiver, iF);
@@ -69,6 +75,11 @@ public class RNNowPlayingModule extends ReactContextBaseJavaModule {
         String track = intent.getStringExtra("track");
         Long duration = intent.getLongExtra("duration", 0);
         Boolean playing = intent.getBooleanExtra("playing", false);
+
+        if (action == BroadcastTypes.SPOTIFY_METADATA_CHANGED) {
+          // Spotify metadata change does not include playing field, so we assume its true
+          playing = true;
+        }
 
         if (artist == null && album == null && track == null){
           return;
