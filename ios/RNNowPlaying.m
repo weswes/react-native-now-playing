@@ -2,7 +2,9 @@
 
 
 @implementation RNNowPlaying
-
+{
+  bool hasListeners
+}
 
 RCT_EXPORT_MODULE();
 
