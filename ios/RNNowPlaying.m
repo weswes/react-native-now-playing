@@ -8,6 +8,12 @@
 
 RCT_EXPORT_MODULE();
 
+-(BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
+
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[@"NowPlayingEvent"];
@@ -34,7 +40,25 @@ RCT_EXPORT_MODULE();
     NSString *albumTitle = [NSString stringWithFormat:@"%@", item.albumTitle];
     NSString *title = [NSString stringWithFormat:@"%@", item.title];
 
-    if (player.playbackState == MPMusicPlaybackStatePlaying){
+    NSLog(@"[Nowplaying] pbstate: %ld", (long)player.playbackState);
+    NSLog(@"[Nowplaying] artist: %@", artist);
+    NSLog(@"[Nowplaying] albumTitle: %@", albumTitle);
+    NSLog(@"[Nowplaying] title: %@", title);
+
+    if (player.playbackState == MPMusicPlaybackStatePlaying
+        && [artist isEqualToString:@"(null)"]
+        && [albumTitle isEqualToString:@"(null)"]
+        && [title isEqualToString:@"(null)"]){
+    [player pause];
+    [player play];
+     NSLog(@"[Nowplaying] pause & play");
+    }
+
+    if (player.playbackState == MPMusicPlaybackStatePlaying
+        && ![artist isEqualToString:@"(null)"]
+        && ![albumTitle isEqualToString:@"(null)"]
+        && ![title isEqualToString:@"(null)"]
+        ){
         [self sendEventWithName:@"NowPlayingEvent"
                            body:@{@"playbackTime": playbackTime,
                                   @"playbackDuration": playbackDuration,
