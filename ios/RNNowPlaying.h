@@ -7,4 +7,3 @@
 @property (nonatomic, retain) MPMusicPlayerController  *musicPlayer;
 
 @end
-  

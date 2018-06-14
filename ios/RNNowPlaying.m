@@ -20,11 +20,23 @@ RCT_EXPORT_MODULE();
 }
 
 -(void)startObserving{
-  hasListeners = YES;
-  self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nowPlayingEventReceived:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:self.musicPlayer];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nowPlayingEventReceived:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:self.musicPlayer];
-  [self.musicPlayer beginGeneratingPlaybackNotifications];
+    // Traiter les cas du refus...
+    if ([MPMediaLibrary authorizationStatus] == MPMediaLibraryAuthorizationStatusAuthorized){
+        [self registerNotif];
+    } else {
+        [MPMediaLibrary requestAuthorization:^(MPMediaLibraryAuthorizationStatus status) {
+            [self registerNotif];
+        }];
+    }
+
+}
+
+-(void)registerNotif{
+    hasListeners = YES;
+    self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nowPlayingEventReceived:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:self.musicPlayer];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nowPlayingEventReceived:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:self.musicPlayer];
+    [self.musicPlayer beginGeneratingPlaybackNotifications];
 }
 
 - (void)nowPlayingEventReceived:(NSNotification *)notification
@@ -46,15 +58,6 @@ RCT_EXPORT_MODULE();
     NSLog(@"[Nowplaying] title: %@", title);
 
     if (player.playbackState == MPMusicPlaybackStatePlaying
-        && [artist isEqualToString:@"(null)"]
-        && [albumTitle isEqualToString:@"(null)"]
-        && [title isEqualToString:@"(null)"]){
-    [player pause];
-    [player play];
-     NSLog(@"[Nowplaying] pause & play");
-    }
-
-    if (player.playbackState == MPMusicPlaybackStatePlaying
         && ![artist isEqualToString:@"(null)"]
         && ![albumTitle isEqualToString:@"(null)"]
         && ![title isEqualToString:@"(null)"]
@@ -65,10 +68,8 @@ RCT_EXPORT_MODULE();
                                   @"title": title,
                                   @"albumTitle": albumTitle,
                                   @"artist": artist
-
                                   }];
     }
-
 
 }
 
