@@ -12,6 +12,11 @@ RCT_EXPORT_MODULE();
     return YES;
 }
 
+static RNNowPlaying *RNNowPlayingInstance = nil;
+
++ (nonnull instancetype)instance {
+    return RNNowPlayingInstance;
+}
 
 - (NSArray<NSString *> *)supportedEvents
 {
@@ -22,6 +27,7 @@ RCT_EXPORT_MODULE();
  Register to events
  **/
 -(void)startObserving{
+    NSLog(@"RNNowPlaying startObserving");
     // Check Authorization on MPMediaLibrary
     // Traiter les cas du refus...
     if ([MPMediaLibrary authorizationStatus] == MPMediaLibraryAuthorizationStatusAuthorized){
@@ -32,7 +38,10 @@ RCT_EXPORT_MODULE();
         }];
     }
     
+#if __has_include(<SpotifyAppRemoteSDK/SpotifyAppRemote.h>)
+    NSLog(@"Spotify Framework is installed !");
     [self startObservingSpotify];
+#endif
 
 }
 
@@ -79,7 +88,7 @@ RCT_EXPORT_MODULE();
 }
 
 
-/// SPOTIFY
+#if __has_include(<SpotifyAppRemoteSDK/SpotifyAppRemote.h>)
 -(void)startObservingSpotify{
     SPTAppRemoteConnectionParamsImageFormat format = SPTAppRemoteConnectionParamsImageFormatAny;
     SPTAppRemoteConnectionParams *params =
@@ -160,4 +169,6 @@ RCT_EXPORT_MODULE();
     }
     return YES;
 }
+#endif
+    
 @end
