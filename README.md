@@ -1,4 +1,14 @@
 # react-native-now-playing
+React Native module to detect Now Playing Music from various player. Compatible with iOS & Android.
+
+
+| Player | iOS | Android |
+| --- | --- | --- |
+| Spotify | :x: | :heavy_check_mark: |
+| Deezer | :x: | :question: |
+| Apple Music | :heavy_check_mark: | :question: |
+| Google Music |  :x: | :heavy_check_mark: |
+| VLC | :x: | :question: |
 
 ## Getting started
 
