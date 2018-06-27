@@ -61,8 +61,34 @@ class NowPlaying {
 	**/
 	authDeezer(){
 		console.log("NowPlaying authDeezer");
+		// Tester si token existe
+		const APP_ID = "215504"; // 
+		const REDIRECT_URI = "";
+		const authUrl = "https://connect.deezer.com/oauth/auth.php?app_id="+APP_ID+"&redirect_uri="+REDIRECT_URI+"&perms=basic_access,offline_access&response_type=token";
+		// Fetch will open browser and then redirect user to the app
+		fetch(authUrl)
+			.then(response => {
+
+			})
+			.catch(error => {
+				console.log("Auth Deezer error:" + error);
+			});
+		
+
 		this.deezerUserId = "";
 		this.deezerInterval = setInterval(fetchDeezerData, 60000);
+	}
+	
+	
+	authDeezerCallback(){
+		//save token
+		console.log(response);
+		token = ""; // save token as it never expire
+		fetch("https://api.deezer.com/user/me?token"+token)
+			.then(response => {
+				console.log(response);
+				user = "";
+			})
 	}
 	
 	fetchDeezerData(){
